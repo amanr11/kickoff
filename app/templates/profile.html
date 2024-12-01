@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - KickOff{% endblock %}
+
+{% block content %}
+<h2>Your Profile</h2>
+<p>Welcome, {{ current_user.username }}! Here's your profile info:</p>
+
+<ul>
+    <li><strong>Email:</strong> {{ current_user.email }}</li>
+    <li><strong>Joined:</strong> {{ current_user.date_joined.strftime('%B %d, %Y') }}</li>
+    <!-- Add any other user info -->
+</ul>
+
+<p>Feel free to update your profile details <a href="{{ url_for('main.edit_profile') }}">here</a>.</p>
+{% endblock %}

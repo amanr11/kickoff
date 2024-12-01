@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-container">
+    <img src="/static/images/5aside.jpg" alt="Background Image" class="hero-image">
+    <div class="content">
+        <h1 class="display-3 fw-bold">KickOff: Play. Connect. Win.</h1>
+        <p class="lead">Your ultimate platform to find football games and meet players in your area.</p>
+        <a href="{{ url_for('main.register') }}" class="btn btn-warning btn-lg">Get Started</a>
+    </div>
+</div>
+
+
+<!-- About Section -->
+<section class="about-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Why Choose KickOff?</h2>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img src="/static/icons/find-games.svg" alt="Find Games" class="mb-3" style="width: 80px;">
+                <h5>Find Games Near You</h5>
+                <p>Quickly browse games in your area and join with ease.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="/static/icons/connect-players.svg" alt="Connect with Players" class="mb-3" style="width: 80px;">
+                <h5>Connect with Footballers</h5>
+                <p>Build your network and play with like-minded players.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="/static/icons/play-win.svg" alt="Play and Win" class="mb-3" style="width: 80px;">
+                <h5>Play and Win</h5>
+                <p>Join games, compete, and become a star in your local football community.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cool Stats Section -->
+<section class="stats-section bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">KickOff by the Numbers</h2>
+        <div class="row text-center">
+            <div class="col-md-3">
+                <h1 class="display-4">10k+</h1>
+                <p>Active Players</p>
+            </div>
+            <div class="col-md-3">
+                <h1 class="display-4">2k+</h1>
+                <p>Games Hosted</p>
+            </div>
+            <div class="col-md-3">
+                <h1 class="display-4">15+</h1>
+                <p>Regions Covered</p>
+            </div>
+            <div class="col-md-3">
+                <h1 class="display-4">95%</h1>
+                <p>User Satisfaction</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Infographics Section -->
+<section class="infographics-section py-5 text-light" style="background-color: #28a745;">
+    <div class="container text-center">
+        <h2>Football Made Easy</h2>
+        <p class="mb-4">Join games, connect with players, and make every match count.</p>
+        <div class="row">
+            <div class="col-md-4">
+                <img src="/static/icons/find-games.svg" alt="Infographic 1" class="mb-3" style="width: 100px;">
+                <p>Easy Matchmaking</p>
+            </div>
+            <div class="col-md-4">
+                <img src="/static/icons/connect-players.svg" alt="Infographic 2" class="mb-3" style="width: 100px;">
+                <p>Real-Time Updates</p>
+            </div>
+            <div class="col-md-4">
+                <img src="/static/icons/play-win.svg" alt="Infographic 3" class="mb-3" style="width: 100px;">
+                <p>Secure Payments</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

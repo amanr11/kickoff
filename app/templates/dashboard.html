@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Arena - KickOff{% endblock %}
+
+{% block content %}
+<h2>Your Arena</h2>
+<p>Here you can manage your football games and view details.</p>
+
+<!-- Example content for dashboard, you can customize this -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming Games</h5>
+                <p class="card-text">View your upcoming games here.</p>
+                <a href="#" class="btn btn-primary">View Games</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your Posts</h5>
+                <p class="card-text">View or edit the games you have posted.</p>
+                <a href="#" class="btn btn-primary">View Posts</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
