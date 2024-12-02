@@ -119,23 +119,38 @@ footer {
     text-decoration: none; /* Remove underline */
 }
 
-/* Remove dropdown arrows for Games and Profile */
-.navbar-nav .nav-item.dropdown .nav-link::after {
-    display: none; /* Remove the arrow icon */
-}
-
-/* Enable dropdown on hover */
+/* Fix dropdown disappearing issue */
 .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
-    display: block; /* Show dropdown menu when hovering over the item */
+    display: block; /* Ensure the dropdown remains visible */
+    margin-top: 0; /* Prevent overlap */
 }
 
-.navbar-nav .nav-item.dropdown .dropdown-menu {
-    display: none; /* Hide dropdown menu by default */
+.dropdown-menu {
+    display: none; /* Initially hidden */
     position: absolute;
-    background-color: #f1c40f;
-    border-radius: 5px;
-    margin-top: 10px;
+    background-color: #f1c40f; /* Accent Yellow */
+    border: none; /* Remove border */
+    padding: 10px 0; /* Add padding for better spacing */
+    z-index: 1000; /* Ensure it appears above other elements */
 }
+
+.dropdown:hover .dropdown-menu {
+    display: block; /* Show dropdown on hover */
+}
+
+.dropdown-item {
+    font-family: "Lato", sans-serif;
+    font-weight: bold;
+    color: #333333; /* Dark Charcoal */
+    padding: 10px 20px; /* Adjust spacing */
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #28a745; /* Main Green */
+    color: #f5f5dc; /* Neutral Beige */
+}
+
 
 /* Navbar Layout */
 .navbar .navbar-nav {
@@ -207,6 +222,14 @@ footer{
 /* Adjustments for Section Layouts */
 .about-section, .stats-section, .infographics-section {
     margin-top: 4rem;
+}
+
+#infoimg{
+    transition: transform 0.3s ease
+}
+
+#infoimg:hover{
+    transform: scale(1.1);
 }
 
 .about-section .row > div,

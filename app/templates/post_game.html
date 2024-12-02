@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Post a Game - KickOff{% endblock %}
+
+{% block content %}
+<h2>Post a Game</h2>
+<p>Organizing a game? Share the details below to invite others!</p>
+
+<form method="POST" action="{{ url_for('main.post_game') }}">
+    <div class="mb-3">
+        <label for="game_title" class="form-label">Game Title</label>
+        <input type="text" class="form-control" id="game_title" name="game_title" placeholder="Game title (e.g., 5-a-side match)" required>
+    </div>
+    <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" class="form-control" id="location" name="location" placeholder="Enter location" required>
+    </div>
+    <div class="mb-3">
+        <label for="date_time" class="form-label">Date and Time</label>
+        <input type="datetime-local" class="form-control" id="date_time" name="date_time" required>
+    </div>
+    <div class="mb-3">
+        <label for="player_count" class="form-label">Players Needed</label>
+        <input type="number" class="form-control" id="player_count" name="player_count" placeholder="Number of players needed" required>
+    </div>
+    <button type="submit" class="btn btn-success">Post Game</button>
+</form>
+{% endblock %}

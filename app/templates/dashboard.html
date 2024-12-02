@@ -1,30 +1,43 @@
+
 {% extends 'base.html' %}
-
-{% block title %}Arena - KickOff{% endblock %}
-
+{% block title %}Arena{% endblock %}
 {% block content %}
-<h2>Your Arena</h2>
-<p>Here you can manage your football games and view details.</p>
-
-<!-- Example content for dashboard, you can customize this -->
-<div class="row">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Upcoming Games</h5>
-                <p class="card-text">View your upcoming games here.</p>
-                <a href="#" class="btn btn-primary">View Games</a>
+<div class="dashboard-container">
+    <h1 class="text-center mb-4">Welcome to the Arena</h1>
+    <div class="filters-container d-flex justify-content-center mb-3">
+        <input type="text" id="gameSearch" class="form-control w-50 me-2" placeholder="Search games by name or location">
+        <select id="skillFilter" class="form-select w-25 me-2">
+            <option value="">All Skill Levels</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+        <button class="btn btn-primary" id="applyFilters">Apply Filters</button>
+    </div>
+    <div id="gameList" class="row">
+        <!-- Placeholder for dynamic game cards -->
+        <div class="col-md-4 mb-3" data-skill="Beginner">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Game at Hyde Park</h5>
+                    <p class="card-text">Skill Level: Beginner</p>
+                    <p class="card-text">Time: 3 PM</p>
+                    <a href="#" class="btn btn-primary">Join Game</a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Your Posts</h5>
-                <p class="card-text">View or edit the games you have posted.</p>
-                <a href="#" class="btn btn-primary">View Posts</a>
+        <div class="col-md-4 mb-3" data-skill="Advanced">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Game at Roundhay Park</h5>
+                    <p class="card-text">Skill Level: Advanced</p>
+                    <p class="card-text">Time: 5 PM</p>
+                    <a href="#" class="btn btn-primary">Join Game</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
 {% endblock %}

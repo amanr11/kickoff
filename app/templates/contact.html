@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
-
-{% block title %}Contact - KickOff{% endblock %}
-
+{% block title %}Contact{% endblock %}
 {% block content %}
-<h2>Contact Us</h2>
-<p>If you have any questions, feel free to reach out!</p>
+<div class="contact-container">
+    <h1 class="text-center mb-4">Contact Us</h1>
+    <form id="contactForm">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" rows="5" placeholder="Your Message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<script src="{{ url_for('static', filename='js/contact.js') }}"></script>
 
-<!-- Contact Form -->
-<form method="POST">
-    <div class="mb-3">
-        <label for="name" class="form-label">Your Name</label>
-        <input type="text" class="form-control" id="name" placeholder="Your Name" required>
-    </div>
-    <div class="mb-3">
-        <label for="email" class="form-label">Your Email</label>
-        <input type="email" class="form-control" id="email" placeholder="Your Email" required>
-    </div>
-    <div class="mb-3">
-        <label for="message" class="form-label">Your Message</label>
-        <textarea class="form-control" id="message" rows="4" placeholder="Your Message" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-success">Send Message</button>
-</form>
 {% endblock %}
+

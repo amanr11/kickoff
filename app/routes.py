@@ -98,13 +98,56 @@ def dashboard():
 def profile():
     return render_template('profile.html')
 
+@main.route('/upload_picture', methods=['POST'])
+def upload_picture():
+    # Handle the file upload here
+    if 'profile_picture' in request.files:
+        file = request.files['profile_picture']
+        # Save the file logic (ensure you save it securely)
+        # Example: file.save('path_to_save_file')
+        return redirect(url_for('main.profile'))  # Redirect to the profile page after upload
+    return "No file selected", 400
+
 @main.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
+    if request.method == 'POST':
+        # Update the user profile details here
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Save changes to the database (mock logic here)
+        # Example:
+        # current_user.username = username
+        # current_user.email = email
+        # current_user.set_password(password)
+
+        return redirect(url_for('main.profile'))  # Redirect to the profile page
     return render_template('edit_profile.html')
 
 @main.route('/post_game', methods=['GET', 'POST'])
+@login_required
 def post_game():
-    return render_template('post_game.html')
+    from app.forms import GameForm  # Ensure import if not at the top
+    from app.models import Game  # Import the Game model
+    from flask_login import current_user  # For the logged-in user's ID
+
+    form = GameForm()
+    if form.validate_on_submit():  # When the form is submitted and valid
+        new_game = Game(
+            host_id=current_user.id,  # Assuming the user is logged in
+            title=form.title.data,
+            location=form.location.data,
+            time=form.date_time.data,
+            players_needed=form.players_needed.data
+        )
+        db.session.add(new_game)
+        db.session.commit()  # Save the game to the database
+        flash('Game posted successfully!', 'success')
+        return redirect(url_for('main.dashboard'))  # Redirect to the dashboard
+
+    return render_template('post_game.html', form=form)
+
 
 @main.route('/search_game')
 def search_game():
