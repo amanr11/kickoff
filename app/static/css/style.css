@@ -7,7 +7,8 @@ Dark Charcoal: #333333
 Light Gray: #e2e2e2
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Shrikhand&display=swap');
+
 /* Global Styles */
 body {
     font-family: "Lato", sans-serif;
@@ -49,7 +50,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: white; /* Adjust text color if needed */
+    color: #f5f5dc; /* Adjust text color if needed */
 }
 
 
@@ -60,7 +61,19 @@ body {
 
 .about-section .row, .infographics-section .row {
     display: flex;
-    
+}
+
+.about-section h1, .stats-section h1{
+    font-family: "Shrikhand", serif;
+    font-weight: 400;
+    font-style: normal;
+
+}
+
+.stats-section {
+    background: #333333;
+    color: #f1c40f;
+    border-radius: 10px;
 }
 
 /* Adjusting Column Sizes for Better Layout */
@@ -71,13 +84,18 @@ body {
 
 
 /* Catchphrases and Highlights */
-.infographics-section h2 {
-    font-family: 'Lobster', cursive;
+.infographics-section h1 {
+    font-family: "Shrikhand", serif;
+    font-weight: 400;
+    font-style: normal;
     font-size: 2.5rem;
-    color: #f1c40f; /* Main Green */
+    color: #333333; /* Main Green */
 }
 
-
+.infographics-section p {
+    color: #333333;
+    font-size: 20px;
+}
 
 /* Footer */
 footer {
@@ -115,7 +133,7 @@ footer {
 }
 
 .navbar-nav .nav-link:hover {
-    color: #f5f5dc; /* Green */
+    color: #f5f5dc; /* Beige */
     text-decoration: none; /* Remove underline */
 }
 
@@ -142,7 +160,7 @@ footer {
     font-family: "Lato", sans-serif;
     font-weight: bold;
     color: #333333; /* Dark Charcoal */
-    padding: 10px 20px; /* Adjust spacing */
+    padding: 0px 10px; /* Adjust spacing */
     transition: all 0.3s ease;
 }
 
@@ -167,9 +185,6 @@ footer {
     justify-content: flex-end;
 }
 
-
-
-
 footer{
     border-radius: 0 !important;
 }
@@ -177,11 +192,24 @@ footer{
 /* Button Styling */
 .btn-lg {
     font-family: "Lato", sans-serif;
-    font-weight: 400;
+    font-weight: bold;
     font-style: normal;
     padding: 10px 30px;
     font-size: 1.2em;
     border-radius: 25px;
+    background-color: #f1c40f;
+    transition: transform 0.3s ease
+}
+
+.btn-lg:hover{
+    font-family: "Lato", sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    padding: 10px 30px;
+    font-size: 1.2em;
+    border-radius: 25px;
+    background-color: #f1c40f;
+    transform: scale(1.15);
 }
 
 .btn-outline-success {
@@ -191,7 +219,7 @@ footer{
     font-family: "Lato", sans-serif;
     font-weight:600;
     font-style: italic;
-    border-radius: 25px;
+    border-radius: 25px !important;
     padding: 10px 18px;
 
     font-size: 0.9em !important;
@@ -205,12 +233,24 @@ footer{
 }
 
 #login1:hover{
-    transform: scale(1.1); 
+
+    color: #f5f5dc;
+}
+
+#login2{
+    background:#FF6961 !important ;
+    margin-left: 2px !important;
+    transition: transform 0.3s ease
+}
+
+#login2:hover{
+
+    color: #f5f5dc;
 }
 
 .btn-outline-success:hover {
-    transform: scale(1.1); 
     background-color: #343a40 !important; /* Green */
+    color: #f5f5dc;
 }
 
 /* Adjustments for Responsive Padding */
@@ -243,4 +283,91 @@ footer{
 .infographics-section .row {
     justify-content: center;
     gap: 0.6rem; /* Add space between the boxes */
+}
+
+/* Contact Page Layout */
+.contact-container {
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 1200px;
+    
+}
+
+
+.contact-container h1 {
+    font-weight: bolder;
+    font-size: 3rem;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+.contact-container p {
+    font-size: 1.2rem;
+    color: #333333;
+    margin-bottom: 30px;
+}
+
+/* Infographic Image Styling */
+.contact-infographic {
+    max-width: 250px; /* Adjust the size as needed */
+    height: auto;
+    margin-top: 20px;
+}
+
+
+/* Styling the Form */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.form-label {
+    font-size: 1.1rem;
+    color: #333333;
+}
+
+.form-control {
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+.form-select{
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+}
+#form-container{
+    background-color: #f0f0ac;
+    border-radius: 10px;
+    padding: 25px 25px;
+}
+
+#text-container {
+    padding-right: 100px;
+    text-align: center; /* Ensure text is centered */
+    height: 100%; /* Optional: ensure the container takes full height */
+}
+
+button[type="submit"] {
+    background-color: #f1c40f; /* Main Green */
+    color: #333333;
+    font-family: 'Lato';
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.btn{
+    border-radius: 10px;
+}
+button[type="submit"]:hover {
+    background-color: #28a745; /* Darker green on hover */
+    color: white;
 }

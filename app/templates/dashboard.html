@@ -3,9 +3,9 @@
 {% block title %}Arena{% endblock %}
 {% block content %}
 <div class="dashboard-container">
-    <h1 class="text-center mb-4">Welcome to the Arena</h1>
+    <h1 class="text-center mb-4"><b>Welcome to the Arena</b></h1>
     <div class="filters-container d-flex justify-content-center mb-3">
-        <input type="text" id="gameSearch" class="form-control w-50 me-2" placeholder="Search games by name or location">
+        <input type="text" id="gameSearch" class="form-control w-50 me-2" placeholder="Search games by location">
         <select id="skillFilter" class="form-select w-25 me-2">
             <option value="">All Skill Levels</option>
             <option value="Beginner">Beginner</option>
@@ -22,6 +22,26 @@
                     <h5 class="card-title">Game at Hyde Park</h5>
                     <p class="card-text">Skill Level: Beginner</p>
                     <p class="card-text">Time: 3 PM</p>
+                    <a href="#" class="btn btn-primary">Join Game</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3" data-skill="Beginner">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Game at Hyde Park</h5>
+                    <p class="card-text">Skill Level: Beginner</p>
+                    <p class="card-text">Time: 1 PM</p>
+                    <a href="#" class="btn btn-primary">Join Game</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3" data-skill="Advanced">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Game at Roundhay Park</h5>
+                    <p class="card-text">Skill Level: Advanced</p>
+                    <p class="card-text">Time: 7 PM</p>
                     <a href="#" class="btn btn-primary">Join Game</a>
                 </div>
             </div>

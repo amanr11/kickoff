@@ -1,28 +1,40 @@
-$(document).ready(function () {
-    // Form validation
-    $("#contactForm").on("submit", function (e) {
-        e.preventDefault();
-        let isValid = true;
+document.getElementById("contactForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-        $(this).find("input, textarea").each(function () {
-            if ($(this).val().trim() === "") {
-                isValid = false;
-                $(this).addClass("is-invalid");
-            } else {
-                $(this).removeClass("is-invalid").addClass("is-valid");
-            }
-        });
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
 
-        if (isValid) {
-            alert("Form submitted successfully!");
-            this.reset();
+    // Basic validation
+    if (!name || !email || !message) {
+        alert('Please fill out all fields.');
+        return;
+    }
+
+    const formData = new FormData(this); // Collect form data
+
+    const url = this.getAttribute('data-contact-url'); // Get the URL from the data attribute
+
+    fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('HTTP error! status: ' + response.status);
         }
-    });
-
-    // Smooth scroll to FAQ section
-    $(".faq-link").on("click", function (e) {
-        e.preventDefault();
-        const target = $($(this).attr("href"));
-        $("html, body").animate({ scrollTop: target.offset().top }, 800);
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert('Your message has been sent!');
+            document.getElementById("contactForm").reset();
+        } else {
+            alert(`There was an error: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        alert('There was a problem with the form submission.');
+        console.error('Error:', error);
     });
 });

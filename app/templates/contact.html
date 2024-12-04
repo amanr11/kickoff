@@ -1,25 +1,33 @@
-{% extends 'base.html' %}
-{% block title %}Contact{% endblock %}
+{% extends 'base.html' %} 
+{% block title %}Contact{% endblock %} 
 {% block content %}
 <div class="contact-container">
-    <h1 class="text-center mb-4">Contact Us</h1>
-    <form id="contactForm">
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+    <div class="row">
+        <!-- Left Side: Text and Infographic -->
+        <div class="col-md-6 d-flex flex-column justify-content-center align-items-center" id="text-container">
+            <h1>We're here to help.</h1>
+            <p class="lead">
+                If you didn't find what you were looking for or need some help, we're just one click away. Our team is here
+                to assist you with any inquiries. Fill in the form and let's <b>kickoff</b> the conversation!
+            </p>
+            <img src="/static/icons/play-win.svg" alt="Infographic" class="contact-infographic">
         </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+        <!-- Right Side: Form -->
+        <div class="col-md-6" id="form-container">
+            <form id="contactForm" data-contact-url="{{ url_for('main.contact') }}">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="mb-3">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                </div>
+                <button type="submit" class="btn">Send</button>
+            </form>            
         </div>
-        <div class="mb-3">
-            <label for="message" class="form-label">Message</label>
-            <textarea class="form-control" id="message" rows="5" placeholder="Your Message" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
 </div>
 <script src="{{ url_for('static', filename='js/contact.js') }}"></script>
-
 {% endblock %}
-

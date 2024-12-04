@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user
-from app.forms import RegistrationForm, LoginForm
-from app.models import User
-from app import db
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from flask_login import login_user, logout_user, login_required, current_user
+from app.forms import RegistrationForm, LoginForm, ContactForm
+from app.models import User,Game
+from app import db,mail
 from werkzeug.security import generate_password_hash
 from flask_mail import Message
-from app import mail
+
 
 main = Blueprint('main', __name__)
 
@@ -36,7 +36,7 @@ def register():
         msg.html = f"""
         <h2>Welcome to KickOff, {user.username}!</h2>
         <p>Thanks for signing up. To complete your registration, please verify your email by clicking the link below:</p>
-        <a href="{verification_url}" style="display:inline-block;padding:10px 20px;color:#fff;background-color:#007bff;border-radius:5px;text-decoration:none;">Verify Email</a>
+        <a href="{verification_url}" style="display:inline-block;padding:10px 20px;color:#fff;background-color:#f1c40f;border-radius:5px;text-decoration:none;">Verify Email</a>
         <p>If the button above doesn't work, copy and paste the following link into your browser:</p>
         <p>{verification_url}</p>
         <p>Thank you for joining KickOff!</p>
@@ -125,34 +125,75 @@ def edit_profile():
         return redirect(url_for('main.profile'))  # Redirect to the profile page
     return render_template('edit_profile.html')
 
-@main.route('/post_game', methods=['GET', 'POST'])
-@login_required
-def post_game():
-    from app.forms import GameForm  # Ensure import if not at the top
-    from app.models import Game  # Import the Game model
-    from flask_login import current_user  # For the logged-in user's ID
+from datetime import datetime
 
-    form = GameForm()
-    if form.validate_on_submit():  # When the form is submitted and valid
+@main.route('/post_game', methods=['GET', 'POST'])
+@login_required  # Optional: Ensure only logged-in users can post a game
+def post_game():
+    if request.method == 'POST':  # Handle form submission
+        location = request.form.get('location')
+        date_time_str = request.form.get('date_time')  # Get the datetime from the form
+        player_count = request.form.get('player_count')
+        quality = request.form.get('quality')  # Get the quality from the form
+        description = request.form.get('description')  # Get the description from the form (optional)
+        
+        # Validate the form inputs
+        if not location or not date_time_str or not player_count or not quality:
+            flash('All fields except description are required!', 'danger')
+            return redirect(url_for('main.post_game'))
+        
+        # Convert the date-time string to a datetime object
+        try:
+            date_time = datetime.fromisoformat(date_time_str)  # Convert to datetime object
+        except ValueError:
+            flash('Invalid date/time format. Please use a valid date-time.', 'danger')
+            return redirect(url_for('main.post_game'))
+        
+        # Save to the database
         new_game = Game(
-            host_id=current_user.id,  # Assuming the user is logged in
-            title=form.title.data,
-            location=form.location.data,
-            time=form.date_time.data,
-            players_needed=form.players_needed.data
+            host_id=current_user.id,  # Assume logged-in user's ID is the host
+            location=location,
+            time=date_time,  # Store the datetime object
+            players_needed=int(player_count),
+            quality=quality,  # Store the quality of the game
+            description=description  # Optional description
         )
         db.session.add(new_game)
-        db.session.commit()  # Save the game to the database
+        db.session.commit()
+        
         flash('Game posted successfully!', 'success')
-        return redirect(url_for('main.dashboard'))  # Redirect to the dashboard
+        return redirect(url_for('main.dashboard'))  # Redirect after successful submission
 
-    return render_template('post_game.html', form=form)
-
+    return render_template('post_game.html')
 
 @main.route('/search_game')
 def search_game():
     return render_template('search_game.html')
 
-@main.route('/contact')
+@main.route('/contact', methods=['GET', 'POST'])
 def contact():
+    # Handle the AJAX POST request
+    if request.method == 'POST':
+        # Manually validate the fields
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        
+        if not name or not email or not message:
+            return jsonify({'success': False, 'error': 'All fields are required.'})
+
+        # Send the email
+        msg = Message(
+            subject="New Contact Query from KickOff Website",
+            recipients=["kickoff.officialapp@gmail.com"],  # Replace with your email address
+            body=f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+        )
+
+        try:
+            mail.send(msg)
+            return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)})
+
+    # Return the contact page if it's a GET request
     return render_template('contact.html')

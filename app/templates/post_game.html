@@ -3,26 +3,45 @@
 {% block title %}Post a Game - KickOff{% endblock %}
 
 {% block content %}
-<h2>Post a Game</h2>
-<p>Organizing a game? Share the details below to invite others!</p>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Form Section -->
+        <div class="col-md-6">
+            <h2>Post a Game</h2>
+            <p>Organizing a game? Share the details below to invite others!</p>
+            <form method="POST" action="{{ url_for('main.post_game') }}" id="form-container">
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" placeholder="Enter location" required>
+                </div>
+                <div class="mb-3">
+                    <label for="date_time" class="form-label">Date and Time</label>
+                    <input type="datetime-local" class="form-control" id="date_time" name="date_time" required>
+                </div>
+                <div class="mb-3">
+                    <label for="player_count" class="form-label">Players Needed</label>
+                    <input type="number" class="form-control" id="player_count" name="player_count" placeholder="Number of players needed" required>
+                </div>
+                <div class="mb-3">
+                    <label for="quality" class="form-label">Game Quality</label>
+                    <select class="form-select" id="quality" name="quality" required>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Game Description (Optional)</label>
+                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Add more details about the game (optional)"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Post Game</button>
+            </form>
+        </div>
 
-<form method="POST" action="{{ url_for('main.post_game') }}">
-    <div class="mb-3">
-        <label for="game_title" class="form-label">Game Title</label>
-        <input type="text" class="form-control" id="game_title" name="game_title" placeholder="Game title (e.g., 5-a-side match)" required>
+        <!-- Image Section -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <img src="{{ url_for('static', filename='images/football_pitch.jpg') }}" alt="Football Pitch" class="img-fluid rounded">
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-        <input type="text" class="form-control" id="location" name="location" placeholder="Enter location" required>
-    </div>
-    <div class="mb-3">
-        <label for="date_time" class="form-label">Date and Time</label>
-        <input type="datetime-local" class="form-control" id="date_time" name="date_time" required>
-    </div>
-    <div class="mb-3">
-        <label for="player_count" class="form-label">Players Needed</label>
-        <input type="number" class="form-control" id="player_count" name="player_count" placeholder="Number of players needed" required>
-    </div>
-    <button type="submit" class="btn btn-success">Post Game</button>
-</form>
+</div>
 {% endblock %}

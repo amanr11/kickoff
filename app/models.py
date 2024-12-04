@@ -35,9 +35,9 @@ class User(db.Model, UserMixin):
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     host_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Link to User model
-    title = db.Column(db.String(100), nullable=False)  # Game title
     location = db.Column(db.String(100), nullable=False)
     time = db.Column(db.DateTime, nullable=False)
+    quality = db.Column(db.String(100), nullable=False)
     players_needed = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text, nullable=True)  # Optional description
     host = db.relationship('User', backref='hosted_games')  # Reference to the host user
