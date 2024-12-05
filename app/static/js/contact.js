@@ -1,19 +1,19 @@
 document.getElementById("contactForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault(); // prevent the default form submission
 
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const message = document.getElementById('message').value;
 
-    // Basic validation
+    // basic input validation
     if (!name || !email || !message) {
         alert('Please fill out all fields.');
         return;
     }
 
-    const formData = new FormData(this); // Collect form data
+    const formData = new FormData(this); 
 
-    const url = this.getAttribute('data-contact-url'); // Get the URL from the data attribute
+    const url = this.getAttribute('data-contact-url'); // get the URL from the data attribute
 
     fetch(url, {
         method: 'POST',

@@ -14,34 +14,35 @@ body {
     font-family: "Lato", sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5dc; /* Neutral Beige */
-    color: #333333; /* Dark Charcoal for text */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+    background-color: #f5f5dc; 
+    color: #333333; 
+    overflow-x: hidden; 
 }
 
 #logo {
-    width: 80px; /* Adjusted size of the logo */
-    height: auto; /* Maintain aspect ratio */
+    width: 80px; 
+    height: auto; 
     margin-right: 80px; 
 }
-/* Hero Section */
+
+/* hero section styling*/
 .hero-container {
     position: relative;
     width: 100%;
-    height: 100vh; /* or any height you prefer */
+    height: 100vh; 
 }
 
-
 .hero-image {
-    width: 118%;
+    width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image covers the whole area */
+    object-fit: cover;
     position: absolute;
     top: 0;
     left: 0;
-    margin-left: -112px;
-    margin-top: -49px;
-    z-index: -1; /* Ensures the image is behind the content */
+    /*margin-left: -112px;
+    margin-top: -49px;*/
+    z-index: -1; 
+    border-radius: 10px;
 }
 
 .content {
@@ -50,13 +51,17 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: #f5f5dc; /* Adjust text color if needed */
+    color: #f5f5dc;
 }
 
 
-/* About Section and Infographics Section Layout */
+/* about,stats and info section styling*/
+.about-section, .stats-section, .infographics-section {
+    margin-top: 4rem;
+}
+
 .about-section, .infographics-section {
-    margin-bottom: 30px; /* Adds spacing between sections */
+    margin-bottom: 30px; 
 }
 
 .about-section .row, .infographics-section .row {
@@ -76,20 +81,16 @@ body {
     border-radius: 10px;
 }
 
-/* Adjusting Column Sizes for Better Layout */
 .about-section .col-md-4, .infographics-section .col-md-4 {
     margin-bottom: 20px;
 }
 
-
-
-/* Catchphrases and Highlights */
 .infographics-section h1 {
     font-family: "Shrikhand", serif;
     font-weight: 400;
     font-style: normal;
     font-size: 2.5rem;
-    color: #333333; /* Main Green */
+    color: #333333; 
 }
 
 .infographics-section p {
@@ -97,18 +98,21 @@ body {
     font-size: 20px;
 }
 
-/* Footer */
-footer {
-    font-family: 'Roboto', sans-serif;
-    background-color: #343a40; /* Dark Charcoal */
-    color: #fff;
-    padding: 20px 0;
+.about-section .row > div,
+.stats-section .row > div,
+.infographics-section .row > div {
+    margin-bottom: 2rem; /* space between rows */
 }
 
-/* Navbar */
+.stats-section .row,
+.about-section .row,
+.infographics-section .row {
+    justify-content: center;
+    gap: 0.6rem; /* space between the boxes */
+}
 
+/* navbar styling */
 .navbar {
-    border-radius: 0 !important; /* Removes rounded edges for the navbar */
     background: #f1c40f !important;
 }
 
@@ -117,9 +121,9 @@ footer {
     font-weight: bold;
     font-style: normal;
     font-size: 1.8em;
-    color: #343a40; /* Dark Charcoal for logo */
+    color: #343a40; 
     display: flex;
-    align-items: center; /* Aligns the logo vertically */
+    align-items: center; 
 }
 
 .navbar-nav .nav-link {
@@ -127,50 +131,48 @@ footer {
     font-weight: bold;
     font-style: normal;
     margin-left: 20px;
-    color: #333333; /* Dark Charcoal for links */
+    color: #333333; 
     text-decoration: none;
-    transition: all 0.3s ease; /* Smooth transition */
+    transition: all 0.3s ease; 
 }
 
 .navbar-nav .nav-link:hover {
-    color: #f5f5dc; /* Beige */
-    text-decoration: none; /* Remove underline */
+    color: #f5f5dc; 
+    text-decoration: none; 
 }
 
-/* Fix dropdown disappearing issue */
 .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
-    display: block; /* Ensure the dropdown remains visible */
-    margin-top: 0; /* Prevent overlap */
+    display: block; 
+    margin-top: 0;
 }
 
 .dropdown-menu {
-    display: none; /* Initially hidden */
+    display: none; 
     position: absolute;
-    background-color: #f1c40f; /* Accent Yellow */
-    border: none; /* Remove border */
-    padding: 10px 0; /* Add padding for better spacing */
-    z-index: 1000; /* Ensure it appears above other elements */
+    background-color: #f1c40f; 
+    border: none; 
+    padding: 10px 0;
+    z-index: 1000; 
 }
 
 .dropdown:hover .dropdown-menu {
-    display: block; /* Show dropdown on hover */
+    display: block; 
 }
 
 .dropdown-item {
     font-family: "Lato", sans-serif;
-    font-weight: bold;
-    color: #333333; /* Dark Charcoal */
-    padding: 0px 10px; /* Adjust spacing */
+    font-weight: normal;
+    color: #333333;
+    padding: 5px 10px; 
     transition: all 0.3s ease;
 }
 
 .dropdown-item:hover {
-    background-color: #28a745; /* Main Green */
-    color: #f5f5dc; /* Neutral Beige */
+    background-color: #28a745;
+    color: #f5f5dc; 
 }
 
 
-/* Navbar Layout */
 .navbar .navbar-nav {
     display: flex;
     justify-content: center;
@@ -185,18 +187,15 @@ footer {
     justify-content: flex-end;
 }
 
-footer{
-    border-radius: 0 !important;
-}
 
-/* Button Styling */
+/* button stylings */
 .btn-lg {
     font-family: "Lato", sans-serif;
     font-weight: bold;
     font-style: normal;
     padding: 10px 30px;
     font-size: 1.2em;
-    border-radius: 25px;
+    border-radius: 25px !important;
     background-color: #f1c40f;
     transition: transform 0.3s ease
 }
@@ -213,7 +212,7 @@ footer{
 }
 
 .btn-outline-success {
-    background-color: #343a40; /* Green */
+    background-color: #343a40; 
     color: white;
     border: none;
     font-family: "Lato", sans-serif;
@@ -233,7 +232,6 @@ footer{
 }
 
 #login1:hover{
-
     color: #f5f5dc;
 }
 
@@ -244,24 +242,18 @@ footer{
 }
 
 #login2:hover{
-
     color: #f5f5dc;
 }
 
 .btn-outline-success:hover {
-    background-color: #343a40 !important; /* Green */
+    background-color: #343a40 !important;
     color: #f5f5dc;
 }
 
-/* Adjustments for Responsive Padding */
+/* responsive padding */
 .container-fluid {
     padding-left: 30px;
     padding-right: 30px;
-}
-
-/* Adjustments for Section Layouts */
-.about-section, .stats-section, .infographics-section {
-    margin-top: 4rem;
 }
 
 #infoimg{
@@ -272,27 +264,14 @@ footer{
     transform: scale(1.1);
 }
 
-.about-section .row > div,
-.stats-section .row > div,
-.infographics-section .row > div {
-    margin-bottom: 2rem; /* Adds space between rows */
-}
 
-.stats-section .row,
-.about-section .row,
-.infographics-section .row {
-    justify-content: center;
-    gap: 0.6rem; /* Add space between the boxes */
-}
-
-/* Contact Page Layout */
+/* contact page layout */
 .contact-container {
     margin: 40px auto;
     padding: 20px;
     max-width: 1200px;
     
 }
-
 
 .contact-container h1 {
     font-weight: bolder;
@@ -307,15 +286,13 @@ footer{
     margin-bottom: 30px;
 }
 
-/* Infographic Image Styling */
 .contact-infographic {
-    max-width: 250px; /* Adjust the size as needed */
+    max-width: 250px; 
     height: auto;
     margin-top: 20px;
 }
 
 
-/* Styling the Form */
 form {
     display: flex;
     flex-direction: column;
@@ -334,11 +311,13 @@ form {
     border-radius: 10px;
     border: 1px solid #ccc;
 }
+
 .form-select{
     border-radius: 10px;
     border: 1px solid #ccc;
     font-size: 0.9rem;
 }
+
 #form-container{
     background-color: #f0f0ac;
     border-radius: 10px;
@@ -346,13 +325,12 @@ form {
 }
 
 #text-container {
-    padding-right: 100px;
-    text-align: center; /* Ensure text is centered */
-    height: 100%; /* Optional: ensure the container takes full height */
+    text-align: center; 
+    height: 100%; 
 }
 
 button[type="submit"] {
-    background-color: #f1c40f; /* Main Green */
+    background-color: #f1c40f; 
     color: #333333;
     font-family: 'Lato';
     font-weight: bold;
@@ -367,7 +345,138 @@ button[type="submit"] {
 .btn{
     border-radius: 10px;
 }
+
 button[type="submit"]:hover {
-    background-color: #28a745; /* Darker green on hover */
+    background-color: #28a745;
     color: white;
+}
+
+/* circular profile pic */
+.profile-pic-preview {
+    border-radius: 50%;
+    object-fit: cover; 
+    width: 150px;  
+    height: 150px; 
+}
+
+/* footer styling */
+footer {
+    font-family: 'Lato', sans-serif;
+    background-color: #343a40; 
+    color: #fff;
+    padding: 30px 0;
+    transition: background-color 0.3s ease;
+}
+
+
+footer hr {
+    border-color: #555;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+footer a.hover-link:hover {
+    color: #f1c40f !important; 
+    transition: color 0.3s ease;
+}
+
+
+footer .social-icons a {
+    font-size: 1.5rem ;
+    transition: transform 0.3s ease, color 0.3s ease !important;
+}
+
+footer .social-icons a:hover {
+    transform: scale(1.2) !important;
+    color: #f1c40f !important; 
+}
+
+
+footer h5 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+footer p {
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+#grey{
+    color: #808080 !important;
+}
+
+footer .text-center p {
+    font-size: 0.85rem;
+    margin-top: 15px;
+}
+
+/* mobile responsiveness */
+@media (max-width: 768px) {
+    .navbar-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .content {
+        font-size: 0.9em;
+    }
+
+    .hero-image {
+        height: 50vh;
+    }
+
+    .stats-section, .about-section, .infographics-section {
+        padding: 20px 10px;
+    }
+
+    footer {
+        padding: 20px 0;
+    }
+
+    footer .social-icons {
+        margin-top: 10px;
+    }
+
+    footer h5 {
+        font-size: 1rem;
+    }
+
+    footer p {
+        font-size: 0.8rem;
+    }
+}
+
+
+/* scroll to top button */
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #f1c40f;
+    border: none;
+    border-radius: 50%;
+    width: 35px;  
+    height: 35px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 18px;  
+    color: white;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  
+}
+
+.scroll-to-top-btn.show {
+    opacity: 1;
+}
+
+.scroll-to-top-btn:hover {
+    background-color: #28a745; 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
 }

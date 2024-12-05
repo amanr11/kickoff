@@ -3,7 +3,7 @@
 {% block content %}
 <div class="contact-container">
     <div class="row">
-        <!-- Left Side: Text and Infographic -->
+        <!-- left side: text and infographic -->
         <div class="col-md-6 d-flex flex-column justify-content-center align-items-center" id="text-container">
             <h1>We're here to help.</h1>
             <p class="lead">
@@ -12,7 +12,7 @@
             </p>
             <img src="/static/icons/play-win.svg" alt="Infographic" class="contact-infographic">
         </div>
-        <!-- Right Side: Form -->
+        <!-- right side: form -->
         <div class="col-md-6" id="form-container">
             <form id="contactForm" data-contact-url="{{ url_for('main.contact') }}">
                 <div class="mb-3">
@@ -29,5 +29,6 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha384-UG8ao2jwOWB7/oDdObZc6ItJmwUkR/PfMyt9Qs5AwX7PsnYn1CRKCTWyncPTWvaS" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/contact.js') }}"></script>
 {% endblock %}

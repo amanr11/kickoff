@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}KickOff{% endblock %}</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
+    <!-- custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
+    <!-- font awesome icons-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
 </head>
 <body> 
-    <!-- Navbar -->
+    <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid px-4">
             <a class="navbar-brand" href="{{ url_for('main.home') }}">
                 <img id="logo" src="/static/images/kickofflogo (2).png" alt="Kickoff" />
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav" aria-controls="navbarNav" 
+            aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
@@ -36,12 +36,13 @@
                         <a class="nav-link" href="{{ url_for('main.dashboard') }}">Arena</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="#" id="gameDropdown" role="button" aria-expanded="false">
-                            Games
+                        <a class="nav-link" href="{{ url_for('main.my_hosted_games') }}" 
+                        id="gameDropdown" role="button" aria-expanded="false">
+                            Game Hub
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="gameDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('main.post_game') }}">Post a Game</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.search_game') }}">Search Games</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.post_game') }}">Create New Game</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.my_hosted_games') }}">Your Hosted Games</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -58,43 +59,59 @@
             {% if current_user.is_authenticated %}
                 <div class="d-flex">
                     <a href="{{ url_for('main.profile') }}" class="btn btn-outline-success mx-2" >Profile</a>
-                    <a href="{{ url_for('main.logout') }}" class="btn btn-outline-success    mx-2" id="login2">Logout</a>
-                    
+                    <a href="{{ url_for('main.logout') }}" class="btn btn-outline-success mx-2" id="login2">Logout</a>
                 </div>
             {% endif %}
         </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- main content -->
     <main class="container my-5">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer Section -->
-    <footer class="bg-dark text-light py-4">
+    <!-- footer section -->
+    <footer class="bg-dark text-light py-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <h5>Quick Links</h5>
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase fw-bold mb-3">Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="{{ url_for('main.contact') }}" class="text-light text-decoration-none">Contact Us</a></li>
-                        <li><a href="{{ url_for('main.profile') }}" class="text-light text-decoration-none">Profile</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">FAQs</a></li>
+                        <li><a href="{{ url_for('main.contact') }}" class="text-light text-decoration-none hover-link">Contact Us</a></li>
+                        <li><a href="{{ url_for('main.profile') }}" class="text-light text-decoration-none hover-link">Profile</a></li>
+                        <li><a href="#" class="text-light text-decoration-none hover-link">FAQs</a></li>
                     </ul>
                 </div>
+
                 <div class="col-md-6">
-                    <h5>Stay Connected</h5>
+                    <h5 class="text-uppercase fw-bold mb-3">Stay Connected</h5>
                     <p>Follow us on social media for updates and promotions!</p>
-                    <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-light"><i class="fab fa-instagram"></i></a>
+                    <div class="social-icons">
+                        <a href="#" class="text-light me-3 hover-icon"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-light me-3 hover-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light hover-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-light mt-4">
+
+            <div class="row mt-4">
+                <div class="col text-left">
+                    <p id="grey">&copy; 2024 KickOff. All rights reserved.</p>
+                </div>
+                <div class="col text-right">
+                    <p ><a href="#" id="grey" class="text-light text-decoration-none hover-link">Terms and Conditions</a></p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
+
+
+    <!-- scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha384-UG8ao2jwOWB7/oDdObZc6ItJmwUkR/PfMyt9Qs5AwX7PsnYn1CRKCTWyncPTWvaS" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='js/base.js') }}"></script>
 
 </body>

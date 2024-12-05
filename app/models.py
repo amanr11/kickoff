@@ -4,14 +4,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from flask import current_app  
 
-# Users table
+# users table
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    is_verified = db.Column(db.Boolean, default=False)  # Boolean for email verification
-
+    is_verified = db.Column(db.Boolean, default=False)  # boolean value for email verification
+    profile_picture = db.Column(db.String(120), default='default_profile.png') 
+    
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
@@ -31,19 +32,25 @@ class User(db.Model, UserMixin):
             return None
         return User.query.get(data['user_id'])
 
-# Games table
+# games table
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    host_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Link to User model
+    host_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # link to User model
     location = db.Column(db.String(100), nullable=False)
     time = db.Column(db.DateTime, nullable=False)
     quality = db.Column(db.String(100), nullable=False)
     players_needed = db.Column(db.Integer, nullable=False)
-    description = db.Column(db.Text, nullable=True)  # Optional description
-    host = db.relationship('User', backref='hosted_games')  # Reference to the host user
+    description = db.Column(db.Text, nullable=True)  
+    host = db.relationship('User', backref='hosted_games')  # reference to the host user
 
-# Many-to-Many relationship
-game_players = db.Table('game_players',
-    db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
-)
+    # many-to-many rs with User via the game_players table
+    players = db.relationship('User', secondary='game_players', backref=db.backref('games', lazy='dynamic'))
+
+# many-to-many association table
+class GamePlayer(db.Model):
+    __tablename__ = 'game_players'
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    username = db.Column(db.String(20), nullable=False)
+
+    user = db.relationship('User', backref='game_associations')

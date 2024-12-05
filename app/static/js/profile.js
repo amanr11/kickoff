@@ -1,16 +1,10 @@
-$(document).ready(function () {
-    // Profile picture preview
-    $("#profilePicInput").on("change", function () {
-        const [file] = this.files;
-        if (file) {
-            $("#profilePicPreview").attr("src", URL.createObjectURL(file));
-        }
-    });
+function showDeleteConfirmation() {
+    const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    modal.show();
 
-    // Profile update logic
-    $("#editProfileForm").on("submit", function (e) {
-        e.preventDefault();
-        alert("Profile updated successfully!");
-        // Add AJAX or form submission logic here
-    });
-});
+    // handle the confirmation button click
+    const confirmButton = document.getElementById('confirmDeleteButton');
+    confirmButton.onclick = function () {
+        document.getElementById('deleteAccountForm').submit();
+    };
+}

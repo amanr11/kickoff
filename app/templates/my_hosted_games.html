@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}My Hosted Games{% endblock %}
+
+{% block content %}
+    <h1 class="text-center mb-4">Games You Hosted</h1>
+
+    {% if hosted_games %}
+        <div class="row">
+            {% for game in hosted_games %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ game.location }}</h5>
+                            <p class="card-text">Skill Level: {{ game.quality }}</p>
+                            <p class="card-text">Time: {{ game.time }}</p>
+                            <p class="card-text">Players Needed: {{ game.players_needed }}</p>
+
+                            <h6>Players Joined:</h6>
+                            <ul>
+                                {% for player in game.players %}
+                                    <li>{{ player.username }}</li>
+                                {% endfor %}
+                            </ul>
+
+                            <form method="POST" action="{{ url_for('main.cancel_game', game_id=game.id) }}" id="cancelForm-{{ game.id }}">
+                                <button type="button" class="btn btn-danger" onclick="showCancelConfirmation({{ game.id }})">Cancel Game</button>
+                            </form>  
+                            <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="confirmationModalLabel">Confirm Action</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="confirmationMessage"></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-danger" id="confirmActionButton">Confirm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">You haven't hosted any games yet.</p>
+    {% endif %}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha384-UG8ao2jwOWB7/oDdObZc6ItJmwUkR/PfMyt9Qs5AwX7PsnYn1CRKCTWyncPTWvaS" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
+
+

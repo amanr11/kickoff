@@ -21,7 +21,7 @@ class GameForm(FlaskForm):
     date_time = DateTimeField('Date and Time', validators=[DataRequired()])
     players_needed = IntegerField('Players Needed', validators=[DataRequired(), NumberRange(min=1)])
     description = StringField('Game Description', validators=[Length(max=500)])
-    quality = StringField('Game Quality', validators=[DataRequired(), Length(max=100)])  # Add 'quality' field
+    quality = StringField('Game Quality', validators=[DataRequired(), Length(max=100)])  
     submit = SubmitField('Post Game')
 
 
