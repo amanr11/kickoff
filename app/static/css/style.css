@@ -2,6 +2,7 @@
 Colors theme implemented:
 Main Green: #28a745
 Accent Yellow: #f1c40f
+Pastel Yellow: #f0efac
 Neutral Beige: #f5f5dc
 Dark Charcoal: #333333
 Light Gray: #e2e2e2
@@ -353,10 +354,11 @@ button[type="submit"]:hover {
 
 /* circular profile pic */
 .profile-pic-preview {
+    border: 4px solid #333333 !important;
     border-radius: 50%;
     object-fit: cover; 
-    width: 150px;  
-    height: 150px; 
+    width: 175px;  
+    height: 175px; 
 }
 
 /* footer styling */
@@ -479,4 +481,57 @@ footer .text-center p {
 .scroll-to-top-btn:hover {
     background-color: #28a745; 
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+}
+
+/* Make sure the button is positioned inside the input box */
+.input-group {
+    position: relative;
+}
+
+#togglePassword {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#eyeIcon {
+    font-size: 1.2rem;
+}
+
+/* Games Card Styling */
+.game-card, .card{
+    border-radius: 10px;
+    border: 5px solid #f1c40f;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease
+}
+
+.game-card:hover{
+    transform: scale(1.02);
+}
+
+
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Form Styling */
+.card-body form {
+    max-width: 600px;
+    margin: auto;
+}
+
+.card-body .form-control, .card-body .form-select {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+input[type="file"] {
+    margin-bottom: 1rem;
 }

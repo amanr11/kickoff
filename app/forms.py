@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextAreaField,DateTimeField, PasswordField, SubmitField
+from wtforms import StringField, IntegerField, TextAreaField,DateTimeField, PasswordField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Regexp, NumberRange
 
 class RegistrationForm(FlaskForm):
@@ -16,6 +16,13 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
+class ProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    bio = TextAreaField('Bio')
+    skill_level = SelectField('Skill Level', choices=[('Beginner', 'Beginner'), ('Intermediate', 'Intermediate'), ('Advanced', 'Advanced')])
+
 class GameForm(FlaskForm):
     location = StringField('Location', validators=[DataRequired(), Length(max=100)])
     date_time = DateTimeField('Date and Time', validators=[DataRequired()])
@@ -24,9 +31,17 @@ class GameForm(FlaskForm):
     quality = StringField('Game Quality', validators=[DataRequired(), Length(max=100)])  
     submit = SubmitField('Post Game')
 
-
 class ContactForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     message = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send Message')
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password',validators=[DataRequired(), Length(min=6), 
+                                                     Regexp('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$', 
+                                                     message="Password must contain at least one letter, one number, and one special character.")])
+    

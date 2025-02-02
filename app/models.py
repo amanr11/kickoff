@@ -1,7 +1,8 @@
+from datetime import datetime
 from app import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import URLSafeTimedSerializer as Serializer
+from itsdangerous import URLSafeTimedSerializer as Serializer  # Keep this import
 from flask import current_app  
 
 # users table
@@ -12,6 +13,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     is_verified = db.Column(db.Boolean, default=False)  # boolean value for email verification
     profile_picture = db.Column(db.String(120), default='default_profile.png') 
+    bio = db.Column(db.Text, nullable=True)  # new field
+    skill_level = db.Column(db.String(50), nullable=True)  # new field
     
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -23,11 +26,24 @@ class User(db.Model, UserMixin):
         s = Serializer(current_app.config['SECRET_KEY'])
         return s.dumps({'user_id': self.id}, salt=current_app.config['SECURITY_PASSWORD_SALT'])
 
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        return s.dumps({'user_id': self.id}, salt='password-reset-salt')
+
     @staticmethod
     def verify_verification_token(token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token, salt=current_app.config['SECURITY_PASSWORD_SALT'])
+            data = s.loads(token, salt=current_app.config['SECURITY_PASSWORD_SALT'], max_age=3600)  # max_age added here
+        except:
+            return None
+        return User.query.get(data['user_id'])
+    
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token, salt='password-reset-salt', max_age=1800)  # max_age added here
         except:
             return None
         return User.query.get(data['user_id'])
@@ -54,3 +70,10 @@ class GamePlayer(db.Model):
     username = db.Column(db.String(20), nullable=False)
 
     user = db.relationship('User', backref='game_associations')
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    message = db.Column(db.String(200), nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)

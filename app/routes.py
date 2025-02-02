@@ -1,8 +1,8 @@
 #essential imports
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from app.forms import RegistrationForm, LoginForm, ContactForm
-from app.models import User,Game,GamePlayer
+from app.forms import RegistrationForm, LoginForm, ContactForm, ForgotPasswordForm, ResetPasswordForm, ProfileForm
+from app.models import User,Game,GamePlayer,Notification
 from app import db,mail
 from werkzeug.security import generate_password_hash
 from flask_mail import Message
@@ -50,6 +50,11 @@ def register():
             <p>If the button above doesn't work, copy and paste the following link into your browser:</p>
             <p>{verification_url}</p>
             <p>Thank you again for joining KickOff!</p>
+
+            <br><br>
+            Cheers,<br>
+            <strong>The Kickoff Team</strong><br>
+            <img src='/static/images/kickofflogo (2).png' alt='kickoff logo' width='100'>
             """
             try:
                 mail.send(msg)
@@ -91,6 +96,8 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()  # query by email
+        print(user)  # Debugging statement to check if the right user is being fetched
+
         if user and user.check_password(form.password.data):  # check hashed password
             if not user.is_verified:
                 flash('Please verify your email before logging in.', 'warning')
@@ -98,8 +105,55 @@ def login():
             login_user(user)
             return redirect(url_for('main.dashboard'))  # redirect to dashboard
         else:
+            print(f"Login failed for email: {form.email.data}")
             flash('Login Failed. Please check email and password.', 'danger')
     return render_template('login.html', form=form)
+
+@main.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    form = ForgotPasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            token = user.get_reset_token()
+            reset_url = url_for('main.reset_password', token=token, _external=True)
+
+            # Send the email with the reset link
+            msg = Message('Password Reset Request', recipients=[form.email.data])
+            msg.html = f'''
+                <h2>Hi {user.username}!</h2>
+                <p>Please follow the link to reset your password.</p>
+                <a href="{reset_url}" style="display:inline-block;padding:10px 20px;color:#fff;background-color:#f1c40f;border-radius:5px;text-decoration:none;">Verify Email</a>
+                <p>If the button above doesn't work, copy and paste the following link into your browser:</p>
+                <p>{reset_url}</p>
+
+                If you did not request a password reset, simply ignore this email.
+                <br><br>
+                Cheers,<br>
+                <strong>The Kickoff Team</strong><br>
+                <img src='https://amanr11.eu.pythonanywhere.com/static/images/kickofflogo%20(2).png' alt='kickoff logo' width='100'>
+            '''
+            mail.send(msg)
+            flash('Check your email for the password reset link.', 'info')
+            return redirect(url_for('main.login'))
+
+    return render_template('forgot_password.html', form=form)
+
+@main.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    user = User.verify_reset_token(token)
+    if not user:
+        flash('Invalid or expired token', 'danger')
+        return redirect(url_for('main.login'))
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.password = generate_password_hash(form.password.data)  # Hash the new password
+        db.session.commit()
+        flash('Your password has been reset! You can now log in.', 'success')
+        return redirect(url_for('main.login'))
+
+    return render_template('reset_password.html', form=form)
 
 @main.route('/logout')
 def logout():
@@ -135,8 +189,7 @@ def dashboard():
 
 @main.route('/filter-games', methods=['POST'])
 def filter_games():
-    data = request.json
-    print('Received filter data:', data)  #debug
+    data = request.json 
 
     search_query = data.get('search_query', '').lower()
     skill_level = data.get('skill_level', '')
@@ -148,7 +201,6 @@ def filter_games():
         query = query.filter_by(quality=skill_level)
 
     games = query.all()
-    print('Filtered games:', games)  #debug
 
     game_data = [
         {
@@ -218,32 +270,42 @@ def allowed_file(filename):
 @main.route('/profile', methods=['GET', 'POST'])
 def profile():
     if not current_user.is_authenticated:  
-        flash("You need to log in to view your profile.", "warning")
+        flash("you need to log in to view your profile.", "warning")
         return redirect(url_for('main.login'))  
 
-    hosted_games = current_user.hosted_games  # games hosted by the user
-    joined_games = Game.query.filter(Game.players.any(id=current_user.id)).all()  # games the user has joined
+    form = ProfileForm()
+    hosted_games = current_user.hosted_games
+    joined_games = Game.query.filter(Game.players.any(id=current_user.id)).all()
 
-    if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
+    if form.validate_on_submit():
+        if form.username.data:
+            current_user.username = form.username.data
+        if form.email.data:
+            current_user.email = form.email.data
+        if form.password.data:
+            current_user.set_password(generate_password_hash(form.password.data))
+        if form.bio.data:
+            current_user.bio = form.bio.data  # fixed here
+        if form.skill_level.data:
+            current_user.skill_level = form.skill_level.data  # fixed here
 
-        # update the user profile details
-        if username:
-            current_user.username = username
-        if email:
-            current_user.email = email
-        if password:
-            current_user.set_password(generate_password_hash(password))
-
-        # save changes to the db
         db.session.commit()
+        flash('profile updated successfully.', 'success')
+        return redirect(url_for('main.profile'))
 
-        flash('Profile updated successfully.', 'success')
-        return redirect(url_for('main.profile'))  # redirect to the profile page
+    if request.method == 'GET':  # pre-fill data
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+        form.bio.data = current_user.bio
+        form.skill_level.data = current_user.skill_level
 
-    return render_template('profile.html', hosted_games=hosted_games, joined_games=joined_games)
+    return render_template('profile.html', form=form, hosted_games=hosted_games, joined_games=joined_games)
+
+@main.route('/game/<int:game_id>', methods=['GET'])
+def game_detail(game_id):
+    # Fetch the game by ID
+    game = Game.query.get_or_404(game_id)
+    return render_template('game_detail.html', game=game)
 
 
 # uploading a profile picture 
@@ -346,6 +408,11 @@ def join_game(game_id):
         flash("This game is already full.", "warning")
     else:
         # add the user to the game and decrement players_needed
+        notification = Notification(
+        user_id=game.host_id,
+        message=f"{current_user.username} has joined your game: {game.title}."
+        )
+        db.session.add(notification)
         association = GamePlayer(game_id=game.id, user_id=current_user.id, username=current_user.username)
         db.session.add(association)
         game.players_needed -= 1
@@ -399,3 +466,9 @@ def delete_account():
     else:
         flash('User not found.', 'danger')
     return redirect(url_for('main.profile'))
+
+@main.route('/notifications')
+@login_required
+def notifications():
+    user_notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.timestamp.desc()).all()
+    return render_template('notifications.html', notifications=user_notifications)
