@@ -29,7 +29,7 @@ KickOff is a web app designed to help football enthusiasts find and join local g
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/kickoff.git
+   git clone https://github.com/amanr11/kickoff.git
    ```
 
 2. Navigate to the project folder:
