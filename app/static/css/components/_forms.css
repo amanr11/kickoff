@@ -1,0 +1,72 @@
+/* _forms.css */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.form-label {
+    font-size: 1.1rem;
+    color: var(--dark-charcoal);
+}
+
+.form-control {
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.form-select {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+}
+
+#form-container {
+    background-color: var(--pastel-yellow);
+    border-radius: 10px;
+    padding: 25px 25px;
+}
+
+button[type="submit"] {
+    background-color: var(--accent-yellow); 
+    color: var(--dark-charcoal);
+    font-family: 'Lato';
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--main-green);
+    color: white;
+}
+
+input[type="file"] {
+    margin-bottom: 1rem;
+}
+
+/* input group and toggle password */
+.input-group {
+    position: relative;
+}
+
+#togglePassword {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#eyeIcon {
+    font-size: 1.2rem;
+}

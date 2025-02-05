@@ -1,0 +1,27 @@
+/* contact page layout */
+.contact-container {
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 1200px;
+    
+}
+
+.contact-container h1 {
+    font-weight: bolder;
+    font-size: 3rem;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+.contact-container p {
+    font-size: 1.2rem;
+    color: #333333;
+    margin-bottom: 30px;
+}
+
+.contact-infographic {
+    max-width: 250px; 
+    height: auto;
+    margin-top: 20px;
+}
+

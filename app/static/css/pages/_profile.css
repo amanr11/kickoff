@@ -1,0 +1,8 @@
+/* _profile.css */
+.profile-pic-preview {
+    border: 4px solid var(--dark-charcoal) !important;
+    border-radius: 50%;
+    object-fit: cover; 
+    width: 175px;  
+    height: 175px; 
+}

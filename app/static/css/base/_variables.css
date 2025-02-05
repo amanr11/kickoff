@@ -1,0 +1,13 @@
+/* _variables.css */
+:root {
+    --main-green: #28a745;
+    --accent-yellow: #f1c40f;
+    --pastel-yellow: #f0efac;
+    --neutral-beige: #f5f5dc;
+    --dark-charcoal: #333333;
+    --light-gray: #e2e2e2;
+
+    /* Font families */
+    --font-primary: "Lato", sans-serif;
+    --font-decorative: "Shrikhand", serif;
+}

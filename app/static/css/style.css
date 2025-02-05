@@ -265,13 +265,11 @@ body {
     transform: scale(1.1);
 }
 
-
 /* contact page layout */
 .contact-container {
     margin: 40px auto;
     padding: 20px;
-    max-width: 1200px;
-    
+    max-width: 1200px
 }
 
 .contact-container h1 {
