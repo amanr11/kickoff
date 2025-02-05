@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Game</title>
+</head>
+<body>
+    <h1>Post Game</h1>
+    <form action="/post_game" method="POST">
+        <input type="text" name="location" placeholder="Location" required>
+        <input type="datetime-local" name="date_time" placeholder="Date and Time" required>
+        <input type="number" name="players_needed" placeholder="Players Needed" required>
+        <input type="text" name="quality" placeholder="Game Quality" required>
+        <textarea name="description" placeholder="Description"></textarea>
+        <button type="submit">Post Game</button>
+    </form>
+</body>
+</html>

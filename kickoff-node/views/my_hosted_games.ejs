@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Hosted Games</title>
+</head>
+<body>
+    <h1>My Hosted Games</h1>
+    <ul>
+        <% games.forEach(game => { %>
+            <li>
+                <p>Location: <%= game.location %></p>
+                <p>Date and Time: <%= game.time %></p>
+                <p>Players Needed: <%= game.players_needed %></p>
+                <p>Quality: <%= game.quality %></p>
+                <p>Description: <%= game.description %></p>
+                <form action="/cancel_game/<%= game._id %>" method="POST">
+                    <button type="submit">Cancel Game</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>
