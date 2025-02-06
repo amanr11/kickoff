@@ -1,57 +1,47 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const passport = require('passport');
-const session = require('express-session');
 const bodyParser = require('body-parser');
-const path = require('path');
-const flash = require('connect-flash');
-const mainRoutes = require('./routes/main');
-
-// Initialize express
+const bcrypt = require('bcryptjs');
 const app = express();
+const port = process.env.PORT || 5000;
 
-// Middleware for parsing request bodies
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/myDatabase';
 
-// Set up EJS for templating
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log(err));
 
-// Express session middleware
-app.use(session({
-    secret: process.env.SECRET_OR_KEY,
-    resave: true,
-    saveUninitialized: true
-}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+const User = require('./models/User');
 
-// Connect flash
-app.use(flash());
+app.post('/api/register', async (req, res) => {
+    const { username, email, password } = req.body;
+    try {
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ success: false, message: 'Email address already exists' });
+        }
 
-// Global variables for flash messages
-app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
-    next();
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        user = new User({
+            username,
+            email,
+            password: hashedPassword,
+        });
+
+        await user.save();
+        res.status(201).json({ success: true, message: 'Registration successful!' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
 });
 
-// Define routes
-app.use('/', mainRoutes);
-
-// Set static folder
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, () => console.log(`Server running on port ${port}`));

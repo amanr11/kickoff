@@ -1,0 +1,54 @@
+/* _home.css */
+.about-section, .stats-section, .infographics-section {
+    margin-top: 4rem;
+}
+
+.about-section, .infographics-section {
+    margin-bottom: 30px; 
+}
+
+.about-section .row, .infographics-section .row {
+    display: flex;
+}
+
+.about-section h1, .stats-section h1 {
+    font-family: var(--font-decorative);
+    font-weight: 400;
+    font-style: normal;
+}
+
+.stats-section {
+    background: var(--dark-charcoal);
+    color: var(--accent-yellow);
+    border-radius: 10px;
+}
+
+.about-section .col-md-4, .infographics-section .col-md-4 {
+    margin-bottom: 20px;
+}
+
+.infographics-section h1 {
+    font-family: var(--font-decorative);
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2.5rem;
+    color: var(--dark-charcoal); 
+}
+
+.infographics-section p {
+    color: var(--dark-charcoal);
+    font-size: 20px;
+}
+
+.about-section .row > div,
+.stats-section .row > div,
+.infographics-section .row > div {
+    margin-bottom: 2rem; /* space between rows */
+}
+
+.stats-section .row,
+.about-section .row,
+.infographics-section .row {
+    justify-content: center;
+    gap: 0.6rem; /* space between the boxes */
+}
