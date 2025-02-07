@@ -1,4 +1,4 @@
 module.exports = {
-    mongoURI: 'YOUR_MONGODB_CONNECTION_STRING_HERE',
+    mongoURI: process.env.MONGO_URI || 'mongodb://localhost:27017/myDatabase',
     secretOrKey: 'secret'
 };

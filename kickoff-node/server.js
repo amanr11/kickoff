@@ -1,47 +1,43 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcryptjs');
+const cors = require('cors');
+const passport = require('passport');
+const session = require('express-session');
+const flash = require('connect-flash');
+const userRoutes = require('./routes/main');
+
 const app = express();
 const port = process.env.PORT || 5000;
 
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/myDatabase';
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.log(err));
 
-mongoose.connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log(err));
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const User = require('./models/User');
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false
+}));
 
-app.post('/api/register', async (req, res) => {
-    const { username, email, password } = req.body;
-    try {
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ success: false, message: 'Email address already exists' });
-        }
+app.use(flash());
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+app.use(passport.initialize());
+app.use(passport.session());
 
-        user = new User({
-            username,
-            email,
-            password: hashedPassword,
-        });
+require('./config/passport')(passport);
 
-        await user.save();
-        res.status(201).json({ success: true, message: 'Registration successful!' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.danger = req.flash('danger');
+    next();
 });
+
+app.use('/api', userRoutes);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import BaseLayout from '../components/BaseLayout';
-import TogglePassword from '../components/TogglePassword';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [messages, setMessages] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        if (params.get('verified')) {
+            setMessages([{ category: 'success', message: 'Email verified successfully' }]);
+        }
+    }, [location]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        const response = await fetch('/api/login', {
+        const response = await fetch('http://localhost:5000/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,10 +27,12 @@ const Login = () => {
         });
 
         const result = await response.json();
-        if (result.success) {
+        if (result.errors) {
+            setMessages(result.errors.map(error => ({ category: 'danger', message: error.msg })));
+        } else if (result.token) {
             navigate('/dashboard');
         } else {
-            setMessages([{ category: 'danger', message: result.message }]);
+            setMessages([{ category: 'danger', message: result.message || 'An error occurred' }]);
         }
     };
 
@@ -55,16 +64,22 @@ const Login = () => {
                     />
                 </div>
 
-                <div className="mb-3 position-relative">
+                <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password</label>
-                    <TogglePassword password={password} setPassword={setPassword} />
+                    <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
                 </div>
 
                 <button type="submit" className="btn btn-primary">Login</button>
             </form>
 
             <p className="mt-3">Don't have an account? <Link to="/register">Register here</Link></p>
-            <p className="mt-3"><Link to="/forgot-password">Forgot Password?</Link></p>
         </BaseLayout>
     );
 };

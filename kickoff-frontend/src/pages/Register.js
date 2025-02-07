@@ -17,19 +17,21 @@ const Register = () => {
             return;
         }
 
-        const response = await fetch('/api/register', {
+        const response = await fetch('http://localhost:5000/api/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, email, password }),
+            body: JSON.stringify({ username, email, password, confirm_password: confirmPassword }),
         });
 
         const result = await response.json();
-        if (result.success) {
+        if (result.errors) {
+            setMessages(result.errors.map(error => ({ category: 'danger', message: error.msg })));
+        } else if (result.success) {
             navigate('/login');
         } else {
-            setMessages([{ category: 'danger', message: result.message }]);
+            setMessages([{ category: 'danger', message: result.message || 'An error occurred' }]);
         }
     };
 

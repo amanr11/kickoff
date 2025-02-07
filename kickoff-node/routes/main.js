@@ -31,38 +31,52 @@ router.get('/register', (req, res) => res.render('register'));
 
 router.post('/register', registrationValidation, validate, async (req, res) => {
     const { username, email, password } = req.body;
+    console.log("Register route called with data:", { username, email, password });
+
     try {
         let user = await User.findOne({ email });
         if (user) {
+            console.log("User already exists with email:", email);
             return res.status(400).json({ errors: [{ msg: 'Email already exists' }] });
         }
+
         const hashedPassword = await bcrypt.hash(password, 10);
+        console.log("Password hashed successfully");
+
         user = new User({ username, email, password: hashedPassword });
         await user.save();
+        console.log("New user created and saved:", user);
 
         const token = user.generateAuthToken();
-        const verificationUrl = `http://${req.headers.host}/verify/${token}`;
+        console.log("Verification token:", token); // Log the token for testing
+        const verificationUrl = `http://${req.headers.host}/api/verify/${token}`;
 
         // Send verification email
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
-            auth: { user: 'your-email@gmail.com', pass: 'your-email-password' }
+            auth: { 
+                user: process.env.EMAIL_USER, 
+                pass: process.env.EMAIL_PASS 
+            }
         });
 
         const mailOptions = {
             to: email,
-            from: 'your-email@gmail.com',
+            from: process.env.EMAIL_USER,
             subject: 'Verify Your Email',
             html: `<p>Click <a href="${verificationUrl}">here</a> to verify your email.</p>`
         };
 
         await transporter.sendMail(mailOptions);
+        console.log("Verification email sent to:", email);
+
         res.status(200).json({ message: 'You are now registered and a verification email has been sent.' });
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
+        console.error("Error in register route:", err);
+        res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 // Verify email route
 router.get('/verify/:token', async (req, res) => {
@@ -74,26 +88,45 @@ router.get('/verify/:token', async (req, res) => {
         }
         user.is_verified = true;
         await user.save();
-        res.status(200).json({ message: 'Email verified successfully' });
+        res.redirect('http://localhost:3000/login?verified=true'); // Redirect to login with success parameter
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 });
 
-// Login route
-router.get('/login', (req, res) => res.render('login'));
-
+// Handle login
 router.post('/login', loginValidation, validate, (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/login',
-        failureFlash: true
+    console.log("Login route called with data:", { email: req.body.email, password: req.body.password });
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            console.error("Error during authentication:", err);
+            return next(err);
+        }
+        if (!user) {
+            console.log("Authentication failed:", info.message);
+            return res.status(400).json({ message: info.message || 'Login Failed. Please check email and password.' });
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                console.error("Error during login:", err);
+                return next(err);
+            }
+            console.log("User logged in successfully:", user.email);
+            return res.status(200).json({ message: 'You are successfully logged in.', success: true });
+        });
     })(req, res, next);
 });
 
-// Dashboard route
-router.get('/dashboard', (req, res) => res.render('dashboard'));
+// Dashboard route (protected)
+router.get('/dashboard', (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'You need to log in to access the dashboard.' });
+    }
+    res.status(200).json({ message: 'Welcome to the dashboard!' });
+});
+
+
 
 // Profile route
 router.get('/profile', (req, res) => {
