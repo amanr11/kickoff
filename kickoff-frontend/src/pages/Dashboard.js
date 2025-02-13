@@ -1,24 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BaseLayout from '../components/BaseLayout';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const Dashboard = () => {
+    const [username, setUsername] = useState('');
     const [userGames, setUserGames] = useState([]);
     const [availableGames, setAvailableGames] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [skillFilter, setSkillFilter] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch user games and available games
-        const fetchGames = async () => {
-            const response = await fetch('/api/dashboard');
-            const result = await response.json();
-            setUserGames(result.userGames);
-            setAvailableGames(result.availableGames);
-        };
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            setUsername(user.username);
+        }
 
-        fetchGames();
-    }, []);
+        const fetchDashboardData = async () => {
+            try {
+                const response = await fetch('/api/dashboard', { credentials: 'include' });
+                if (!response.ok) {
+                    navigate('/login'); // redirect if not logged in
+                    return;
+                }
+                const data = await response.json();
+                setUsername(data.username);
+                setUserGames(data.userGames);
+                setAvailableGames(data.availableGames);
+            } catch (error) {
+                console.error('Error fetching dashboard:', error);
+            }
+        };
+        fetchDashboardData();
+    }, [navigate]);
 
     const applyFilters = () => {
         const filteredGames = availableGames.filter(game => {
@@ -30,24 +45,34 @@ const Dashboard = () => {
         setAvailableGames(filteredGames);
     };
 
+    const handleLeaveGame = async (gameId) => {
+        try {
+            const response = await fetch(`/api/leave-game/${gameId}`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                setUserGames(prevGames => prevGames.filter(game => game._id !== gameId));
+            }
+        } catch (error) {
+            console.error("Error leaving game:", error);
+        }
+    };
+
     const showCancelConfirmation = (gameId) => {
-        // Show confirmation modal
         const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-        const confirmationMessage = document.getElementById('confirmationMessage');
-        const confirmActionButton = document.getElementById('confirmActionButton');
-        
-        confirmationMessage.textContent = "Are you sure you want to cancel this game?";
-        confirmActionButton.onclick = () => {
+        document.getElementById('confirmationMessage').textContent = "Are you sure you want to cancel this game?";
+        document.getElementById('confirmActionButton').onclick = () => {
             document.getElementById(`cancelForm-${gameId}`).submit();
         };
-        
         confirmationModal.show();
     };
 
     return (
         <BaseLayout>
             <div className="dashboard-container">
-                <h1 className="text-center mb-4"><b>Welcome to the Arena!</b></h1>
+                <h1 className="text-center mb-4"><b>Welcome to the Arena, {username || "Player"}!</b></h1>
 
                 <div className="users-games mb-5">
                     <h2 className="text-center mb-3">Your Upcoming Games</h2>
@@ -62,26 +87,14 @@ const Dashboard = () => {
                                             <p className="card-text"><strong>Time:</strong> {game.time}</p>
                                             <p className="card-text"><strong>Players Needed:</strong> {game.players_needed}</p>
                                             <p><strong>Posted by:</strong> {game.host.username}</p>
-                                            <form method="POST" action={`/api/cancel-game/${game.id}`} id={`cancelForm-${game.id}`}>
-                                                <button type="button" className="btn btn-danger" onClick={() => showCancelConfirmation(game.id)}>Cancel Game</button>
-                                            </form>
-                                            <div className="modal fade" id="confirmationModal" tabIndex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-                                                <div className="modal-dialog">
-                                                    <div className="modal-content">
-                                                        <div className="modal-header">
-                                                            <h5 className="modal-title" id="confirmationModalLabel">Confirm Action</h5>
-                                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div className="modal-body">
-                                                            <p id="confirmationMessage"></p>
-                                                        </div>
-                                                        <div className="modal-footer">
-                                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" className="btn btn-danger" id="confirmActionButton">Confirm</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
+                                            {game.host._id === localStorage.getItem('user_id') ? (
+                                                <form method="POST" action={`/api/cancel-game/${game._id}`} id={`cancelForm-${game._id}`}>
+                                                    <button type="button" className="btn btn-danger" onClick={() => showCancelConfirmation(game._id)}>Cancel Game</button>
+                                                </form>
+                                            ) : (
+                                                <button className="btn btn-danger" onClick={() => handleLeaveGame(game._id)}>Leave Game</button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -128,12 +141,13 @@ const Dashboard = () => {
                                             <p className="card-text"><strong>Time:</strong> {game.time}</p>
                                             <p className="card-text"><strong>Players Needed:</strong> {game.players_needed}</p>
                                             <p><strong>Posted by:</strong> {game.host.username}</p>
+                                            
                                             {game.players_needed > 0 ? (
-                                                <form method="POST" action={`/api/join-game/${game.id}`}>
+                                                <form method="POST" action={`/api/join-game/${game._id}`}>
                                                     <button type="submit" className="btn btn-primary">Join Game</button>
                                                 </form>
                                             ) : (
-                                                <button type="button" className="btn btn-secondary" disabled>Game Full</button>
+                                                <button className="btn btn-secondary" disabled>Game Full</button>
                                             )}
                                         </div>
                                     </div>

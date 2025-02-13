@@ -20,6 +20,8 @@ const {
     validate 
 } = require('../middleware/validation');
 
+
+
 // Passport Config
 require('../config/passport')(passport);
 
@@ -40,10 +42,8 @@ router.post('/register', registrationValidation, validate, async (req, res) => {
             return res.status(400).json({ errors: [{ msg: 'Email already exists' }] });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        console.log("Password hashed successfully");
 
-        user = new User({ username, email, password: hashedPassword });
+        user = new User({ username, email, password });
         await user.save();
         console.log("New user created and saved:", user);
 
@@ -96,34 +96,99 @@ router.get('/verify/:token', async (req, res) => {
 });
 
 // Handle login
-router.post('/login', loginValidation, validate, (req, res, next) => {
-    console.log("Login route called with data:", { email: req.body.email, password: req.body.password });
+router.post('/login', (req, res, next) => {
+    console.log("🔵 Login attempt for email:", req.body.email);
+    
     passport.authenticate('local', (err, user, info) => {
         if (err) {
-            console.error("Error during authentication:", err);
-            return next(err);
+            console.error("❌ Authentication error:", err);
+            return res.status(500).json({ message: 'Server error' });
         }
+        
         if (!user) {
-            console.log("Authentication failed:", info.message);
-            return res.status(400).json({ message: info.message || 'Login Failed. Please check email and password.' });
+            console.log("❌ Authentication failed:", info.message);
+            return res.status(400).json({ message: info.message });
         }
+        
         req.logIn(user, (err) => {
             if (err) {
-                console.error("Error during login:", err);
-                return next(err);
+                console.error("❌ Login error:", err);
+                return res.status(500).json({ message: 'Server error' });
             }
-            console.log("User logged in successfully:", user.email);
-            return res.status(200).json({ message: 'You are successfully logged in.', success: true });
+            
+            console.log("✅ User logged in successfully:", {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            });
+            
+            return res.status(200).json({ 
+                success: true, 
+                message: 'Login successful',
+                user: {
+                    id: user._id,
+                    username: user.username,
+                    email: user.email
+                }
+            });
         });
     })(req, res, next);
 });
 
 // Dashboard route (protected)
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ message: 'You need to log in to access the dashboard.' });
     }
-    res.status(200).json({ message: 'Welcome to the dashboard!' });
+
+    try {
+        const user = await User.findById(req.user.id);  // fetch user details
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // fetch games where the user is either the host or has joined
+        const userGames = await Game.find({
+            $or: [{ host_id: user.id }, { players: user.id }]
+        }).populate('host', 'username');
+
+        // fetch available games (games the user hasn't joined or hosted)
+        const availableGames = await Game.find({
+            host_id: { $ne: user.id },
+            players: { $nin: [user.id] }
+        }).populate('host', 'username');
+
+        res.status(200).json({ 
+            username: user.username,  // <-- now returning the username
+            userGames, 
+            availableGames 
+        });
+
+    } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
+router.get('/check-auth', (req, res) => {
+    console.log("Auth check route hit");
+    console.log("Session ID:", req.sessionID);
+    console.log("Session:", req.session);
+    console.log("User:", req.user);
+    
+    if (req.isAuthenticated()) {
+        res.json({ 
+            isAuthenticated: true, 
+            user: {
+                id: req.user._id,
+                username: req.user.username,
+                email: req.user.email
+            }
+        });
+    } else {
+        res.json({ isAuthenticated: false });
+    }
 });
 
 

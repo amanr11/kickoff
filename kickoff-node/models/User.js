@@ -14,7 +14,8 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     password: {
         type: String,
@@ -45,8 +46,16 @@ UserSchema.pre('save', async function (next) {
     next();
 });
 
-UserSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+UserSchema.methods.comparePassword = async function(password) {
+    try {
+        console.log("🔵 Comparing passwords for user:", this.email);
+        const isMatch = await bcrypt.compare(password, this.password);
+        console.log(`${isMatch ? '✅' : '❌'} Password match result:`, isMatch);
+        return isMatch;
+    } catch (err) {
+        console.error("❌ Error comparing passwords:", err);
+        throw err;
+    }
 };
 
 UserSchema.methods.generateAuthToken = function () {

@@ -1,7 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/kickofflogo(2).png'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -9,17 +7,90 @@ import '../assets/css/main.css';
 
 const BaseLayout = ({ children }) => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        // Check if the user is authenticated
         const checkAuth = async () => {
-            const response = await fetch('/api/check-auth');
-            const result = await response.json();
-            setIsAuthenticated(result.isAuthenticated);
+            try {
+                const response = await fetch('/api/check-auth', {
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                console.log('Auth check response:', data);  // Debug log
+                
+                setIsAuthenticated(data.isAuthenticated);
+                if (data.user) {
+                    setUser(data.user);
+                }
+                
+                // Debug logs
+                console.log('Setting isAuthenticated to:', data.isAuthenticated);
+                console.log('Setting user to:', data.user);
+            } catch (error) {
+                console.error('Error checking auth:', error);
+                setIsAuthenticated(false);
+                setUser(null);
+            }
         };
+
         checkAuth();
-    }, [location]);
+    }, [location.pathname]);
+
+    // Debug log for render
+    console.log('Current auth state:', isAuthenticated);
+    console.log('Current user:', user);
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('/api/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                setIsAuthenticated(false);
+                setUser(null);
+                navigate('/login');
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    };
+
+    // Extract the authentication buttons into a separate component for clarity
+    const AuthButtons = () => {
+        console.log('Rendering AuthButtons with isAuthenticated:', isAuthenticated); // Debug log
+        
+        if (!isAuthenticated) {
+            return (
+                <div className="d-flex">
+                    <Link to="/register" className="btn btn-outline-success mx-2">Register</Link>
+                    <Link to="/login" className="btn btn-outline-success mx-2" id="login1">Login</Link>
+                </div>
+            );
+        }
+        
+        return (
+            <div className="d-flex">
+                <Link to="/profile" className="btn btn-outline-success mx-2">Profile</Link>
+                <button onClick={handleLogout} className="btn btn-outline-success mx-2">Logout</button>
+            </div>
+        );
+    };
 
     return (
         <>
@@ -56,17 +127,7 @@ const BaseLayout = ({ children }) => {
                             </li>
                         </ul>
                     </div>
-                    {!isAuthenticated ? (
-                        <div className="d-flex">
-                            <Link to="/register" className="btn btn-outline-success mx-2">Register</Link>
-                            <Link to="/login" className="btn btn-outline-success mx-2" id="login1">Login</Link>
-                        </div>
-                    ) : (
-                        <div className="d-flex">
-                            <Link to="/profile" className="btn btn-outline-success mx-2">Profile</Link>
-                            <Link to="/logout" className="btn btn-outline-success mx-2" id="login2">Logout</Link>
-                        </div>
-                    )}
+                    <AuthButtons />
                 </div>
             </nav>
 
@@ -101,7 +162,7 @@ const BaseLayout = ({ children }) => {
 
                     <div className="row mt-4">
                         <div className="col text-left">
-                            <p id="grey">&copy; 2024 KickOff. All rights reserved.</p>
+                            <p id="grey">&copy; 2025 KickOff. All rights reserved.</p>
                         </div>
                         <div className="col text-right">
                             <p><Link to="#" id="grey" className="text-light text-decoration-none hover-link">Terms and Conditions</Link></p>
